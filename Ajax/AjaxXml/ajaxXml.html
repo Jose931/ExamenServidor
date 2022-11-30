@@ -1,0 +1,58 @@
+<head>
+    <meta charset="utf-8" />
+    <style>
+        table,
+        th,
+        td {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="texto">
+        <h2>Coleccion CDs</h2>
+        <button id="cargaCatalogo">Caraga catálogo</button>
+    </div>
+    <table id="demo"></table>
+    <script>
+        document.getElementById("cargaCatalogo").addEventListener("click", cargarCatalogo);
+        function cargarCatalogo() {
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    console.log("Entra por el if");
+                    cargarXML(this);
+                }
+            };
+            xhr.open("GET", "cds.xml", true);
+            xhr.send();
+        }
+        function cargarXML(xml) {
+            console.log("Entra en la funcion");
+            var docXml = xml.responseXML;
+            console.log("resouesta del XML: " . docXml);
+            var tabla = "<tr><th>Artista</th><th>Titulo</th></tr>";
+            var discos = docXml.getElementsByTagName("CD");
+            console.log(discos);
+            for (var i = 0; i < discos.length; i++) {
+                tabla += "<tr><td>";
+                tabla += discos[i].getElementsByTagName("ARTIST")[0].textContent;
+                tabla += "</td><td>";
+                tabla += discos[i].getElementsByTagName("TITLE")[0].textContent;
+                tabla += "</td></tr>";
+                console.log("Entra en el for");
+            }
+            console.log(tabla);
+
+            document.getElementById("demo").innerHTML = tabla;
+
+        }
+    </script>
+</body>
